@@ -30,6 +30,8 @@ module alu_top(
                operation,  //operation      (input)
                result,     //1 bit result   (output)
                cout,       //1 bit carry out(output)
+               set,        //1 bit set      (output)
+               overflow,   //1 bit overslow (output)
                );
 
 input         src1;
@@ -98,6 +100,7 @@ begin
     2'd3:
     begin
       result <= less;
+      set    <= o_sum;
     end
   endcase
 end
