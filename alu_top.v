@@ -43,6 +43,7 @@ input [2-1:0] operation;
 output        result;
 output        cout;
 
+reg           cout;
 reg           result;
 reg           A;
 reg           B;
@@ -71,18 +72,17 @@ begin
   end
 end
 
-always @( A or B)
+always @( A or B or cin)
 begin
   o_and   <= A&B;
   o_or    <= A|B;
-  o_sum   <= (A&B) | (cin&B) | (cin&A);
-  cout    <= A ^ B ^ cin;
+  cout    <= (A&B) | (cin&B) | (cin&A);
+  o_sum   <= A ^ B ^ cin;
 end
 
-always @( o_and or o_or or o_sum or o_co )
+always @( o_and or o_or or o_sum or cout or operation or less)
 begin
   case(operation)
-  begin
     2'd0:
     begin
       result <= o_and;

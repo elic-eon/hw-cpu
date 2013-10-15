@@ -44,13 +44,19 @@ input [2-1:0] operation;
 
 output        result;
 output        cout;
+output        set;
+output        overflow;
 
+reg           set;
+reg           overflow;
 reg           result;
+reg           cout;
 reg           A;
 reg           B;
 reg           o_and;
 reg           o_or;
 reg           o_sum;
+reg           o_cout;
 
 always @( A_invert or B_invert or src1 or src2)
 begin
@@ -73,36 +79,51 @@ begin
   end
 end
 
-always @( A or B)
+always @( A or B or cin)
 begin
   o_and   <= A&B;
   o_or    <= A|B;
-  o_sum   <= (A&B) | (cin&B) | (cin&A);
-  cout    <= A ^ B ^ cin;
+  o_cout  <= (A&B) | (cin&B) | (cin&A);
+  o_sum   <= A ^ B ^ cin;
 end
 
-always @( o_and or o_or or o_sum or o_co )
+always @( o_and or o_or or o_sum or cout or operation )
 begin
   case(operation)
-  begin
     2'd0:
     begin
-      result <= o_and;
+      result   <= o_and;
+      cout     <= 0;
+      overflow <= 0;
+      set      <= 0;
     end
     2'd1:
     begin
-      result <= o_or;
+      result   <= o_or;
+      cout     <= 0;
+      overflow <= 0;
+      set      <= 0;
     end
     2'd2:
     begin
-      result <= o_sum;
+      result   <= o_sum;
+      cout     <= o_cout;
+      overflow <= ( A&B&~o_sum ) | (~A&~B&o_sum);
+      set      <= 0;
     end
     2'd3:
     begin
-      result <= less;
-      set    <= o_sum;
+      result   <= less;
+      set      <= o_sum;
+      cout     <= 0;
+      overflow <= 0;
     end
   endcase
+end
+
+always @( A or B or cin or operation )
+begin
+  
 end
 
 endmodule
