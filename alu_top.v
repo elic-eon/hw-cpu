@@ -1,22 +1,22 @@
 `timescale 1ns/1ps
 
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    10:58:01 10/10/2011 
-// Design Name: 
-// Module Name:    alu_top 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
+// Company:
+// Engineer:
 //
-// Dependencies: 
+// Create Date:    10:58:01 10/10/2011
+// Design Name:
+// Module Name:    alu_top
+// Project Name:
+// Target Devices:
+// Tool versions:
+// Description:
 //
-// Revision: 
+// Dependencies:
+//
+// Revision:
 // Revision 0.01 - File Created
-// Additional Comments: 
+// Additional Comments:
 //
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -47,7 +47,37 @@ reg           result;
 
 always@( * )
 begin
+    if ( A_invert ) begin
+        A = ~src1;
+    end
+    else begin
+        A = src1;
+    end
 
+    if ( B_invert ) begin
+        B = ~src2;
+    end
+    else begin
+        B = src2;
+    end
+
+    case(operation)
+    2'd0:  begin
+        result <= A & B;
+    end
+
+    2'd1:  begin
+        result <= A | B;
+    end
+
+    2'd2:  begin
+        result <= (A&B) | (cin&B) | (cin&A);
+    end
+
+    2'd3:  begin
+
+    end
+    endcase
 end
 
 endmodule
