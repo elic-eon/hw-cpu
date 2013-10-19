@@ -33,6 +33,7 @@ module alu_bot(
                result,     //1 bit result   (output)
                cout,       //1 bit carry out(output)
                set,        //1 bit set      (output)
+               set_equal,
                overflow   //1 bit overslow (output)
                );
 
@@ -50,6 +51,7 @@ output        result;
 output        cout;
 output        set;
 output        overflow;
+output        set_equal;
 
 reg           set;
 reg           overflow;
@@ -152,6 +154,7 @@ begin
       overflow <= 0;
     end
   endcase
+  assign set_equal <= ~o_sum & equal;
 end
 
 endmodule

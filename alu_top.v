@@ -31,7 +31,8 @@ module alu_top(
                operation,  //operation      (input)
                bonus_op,   //bonus_op       (input)
                result,     //1 bit result   (output)
-               cout       //1 bit carry out(output)
+               cout,       //1 bit carry out(output)
+               bit_equal   //1 bit equal    (output)
                );
 
 input         src1;
@@ -46,6 +47,7 @@ input [3-1:0] bonus_op;
 
 output        result;
 output        cout;
+output        bit_equal;
 
 reg           cout;
 reg           result;
@@ -133,6 +135,7 @@ begin
       endcase
     end
   endcase
+  assign bit_equal <= ~o_sum & equal;
 end
 
 endmodule

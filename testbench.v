@@ -20,7 +20,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-//`define BONUS
+`define BONUS
 
 module testbench;
 
@@ -148,11 +148,27 @@ end
 always@(posedge clk) begin
 	if(start_check) begin
 		if(pattern_count)
-			if(result_out == result_correct) begin
-				if((mem_opcode[pattern_count-1] == 4'd2) || (mem_opcode[pattern_count-1] == 4'd6) && (zcv_out == zcv_correct[3-1:0])) begin
+			if(result_out == result_correct) 
+			begin
+				if(((mem_opcode[pattern_count-1] == 4'd2) || (mem_opcode[pattern_count-1] == 4'd6)) && (zcv_out != zcv_correct[3-1:0])) 
+				begin
+				$display("***************************************************");  
+				$display(" No.%2d error!",pattern_count);
+				$display(" Currect result: %h     Currect ZCV: %b",result_correct, zcv_correct[3-1:0]);
+				$display(" Your result: %h        Your ZCV: %b\n",result_out, zcv_out);
+				$display("***************************************************");    
+				error_count <= error_count + 6'd1;	
 				end
-				else if(zcv_out[2] == zcv_correct[2]) begin
+				else if(zcv_out[2] != zcv_correct[2]) 
+				begin
+				$display("***************************************************");  
+				$display(" No.%2d error!",pattern_count);
+				$display(" Currect result: %h     Currect ZCV: %b",result_correct, zcv_correct[3-1:0]);
+				$display(" Your result: %h        Your ZCV: %b\n",result_out, zcv_out);
+				$display("***************************************************");    
+				error_count <= error_count + 6'd1;	
 				end
+				
 			end
 			else begin
 			   $display("***************************************************");    
@@ -160,7 +176,6 @@ always@(posedge clk) begin
 				4'd0:$display(" AND error! ");                  
 				4'd1:$display(" OR error! ");
 				4'd2:$display(" ADD error! ");
-				
 				4'd6:$display(" SUB error! ");
                 4'd7:
 				     case(bonus_check)
@@ -178,9 +193,9 @@ always@(posedge clk) begin
             default: begin
             end
 			   endcase
-			   $display(" No.%2d error!",pattern_count);
-            $display(" Currect result: %h     Currect ZCV: %b",result_correct, zcv_correct[3-1:0]);
-            $display(" Your result: %h     Your ZCV: %b\n",result_out, zcv_out);
+				$display(" No.%2d error!",pattern_count);
+				$display(" Currect result: %h     Currect ZCV: %b",result_correct, zcv_correct[3-1:0]);
+				$display(" Your result: %h     Your ZCV: %b\n",result_out, zcv_out);
 				$display("***************************************************");    
 				error_count <= error_count + 6'd1;
 			end
