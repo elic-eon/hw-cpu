@@ -25,6 +25,7 @@ module alu_bot(
                src2,       //1 bit source 2 (input)
                less,       //1 bit less     (input)
                equal,      //1 bit equal    (input)
+               in_equal,
                A_invert,   //1 bit A_invert (input)
                B_invert,   //1 bit B_invert (input)
                cin,        //1 bit carry in (input)
@@ -41,6 +42,7 @@ input         src1;
 input         src2;
 input         less;
 input         equal;
+input         in_equal;
 input         A_invert;
 input         B_invert;
 input         cin;
@@ -63,6 +65,7 @@ reg           o_and;
 reg           o_or;
 reg           o_sum;
 reg           o_cout;
+reg           set_equal;
 
 always @( A_invert or B_invert or src1 or src2)
 begin
@@ -138,11 +141,11 @@ begin
       end
       3'd4:
       begin
-        result <= equal;
-      end
-      3'd5:
-      begin
         result <= ~equal;
+      end
+      3'd6:
+      begin
+        result <= equal;
       end
       3'd7:
       begin
@@ -154,7 +157,7 @@ begin
       overflow <= 0;
     end
   endcase
-  assign set_equal <= ~o_sum & equal;
+  set_equal <= ~o_sum & in_equal;
 end
 
 endmodule
