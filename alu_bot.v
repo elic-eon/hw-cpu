@@ -24,23 +24,27 @@ module alu_bot(
                src1,       //1 bit source 1 (input)
                src2,       //1 bit source 2 (input)
                less,       //1 bit less     (input)
+               equal,      //1 bit equal    (input)
                A_invert,   //1 bit A_invert (input)
                B_invert,   //1 bit B_invert (input)
                cin,        //1 bit carry in (input)
                operation,  //operation      (input)
+               bonus_op,   //bonus_op       (input)
                result,     //1 bit result   (output)
                cout,       //1 bit carry out(output)
                set,        //1 bit set      (output)
-               overflow,   //1 bit overslow (output)
+               overflow   //1 bit overslow (output)
                );
 
 input         src1;
 input         src2;
 input         less;
+input         equal;
 input         A_invert;
 input         B_invert;
 input         cin;
 input [2-1:0] operation;
+input [3-1:0] bonus_op;
 
 output        result;
 output        cout;
@@ -87,7 +91,7 @@ begin
   o_sum   <= A ^ B ^ cin;
 end
 
-always @( o_and or o_or or o_sum or cout or operation )
+always @( * )
 begin
   case(operation)
     2'd0:
@@ -113,17 +117,41 @@ begin
     end
     2'd3:
     begin
-      result   <= less;
+      case(bonus_op)
+      3'd0:
+      begin
+        result <= less;
+      end
+      3'd1:
+      begin
+        result <= ~less & ~equal;
+      end
+      3'd2:
+      begin
+        result <= less | equal;
+      end
+      3'd3:
+      begin
+        result <= ~less;
+      end
+      3'd4:
+      begin
+        result <= equal;
+      end
+      3'd5:
+      begin
+        result <= ~equal;
+      end
+      3'd7:
+      begin
+        result <= 0;
+      end
+      endcase
       set      <= o_sum;
       cout     <= 0;
       overflow <= 0;
     end
   endcase
-end
-
-always @( A or B or cin or operation )
-begin
-  
 end
 
 endmodule
